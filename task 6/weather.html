@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #00aaff, #00ffcc);
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        .weather-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: auto;
+            max-width: 400px;
+        }
+        input {
+            padding: 10px;
+            margin-top: 10px;
+            width: 80%;
+        }
+        button {
+            padding: 10px;
+            background-color: #00ffcc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <div class="weather-container">
+        <input type="text" id="location" placeholder="Enter city name" />
+        <button onclick="fetchWeather()">Get Weather</button>
+        <div id="weather-info"></div>
+    </div>
+
+    <script>
+        async function fetchWeather() {
+            const location = document.getElementById('location').value;
+            const apiKey = 'https://api.meteomatics.com/2024-10-01T00:00:00Z/t_2m:C/52.520551,13.461804/html?_gl=1*1go3xrd*_up*MQ..&gclid=Cj0KCQjwu-63BhC9ARIsAMMTLXRpYHQYGjcWFei3c7ne7SUFx01lP0FqObFg9lBx73uCEye-wFEcfDIaAjAvEALw_wcB'; 
+            const url = 'api.meteomatics.com/2024-10-01T00:00:00Z/t_2m:C/52.520551,13.461804/html';
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('City not found');
+                }
+                const data = await response.json();
+                displayWeather(data);
+            } catch (error) {
+                document.getElementById('weather-info').innerHTML = `<p style="color:red;">${error.message}</p>`;
+            }
+        }
+
+        function displayWeather(data) {
+            const weatherInfo = `
+                <h2>${data.name}</h2>
+                <p>Temperature: ${data.main.temp} °C</p>
+                <p>Weather: ${data.weather[0].description}</p>
+                <p>Humidity: ${data.main.humidity}%</p>
+                <p>Wind Speed: ${data.wind.speed} m/s</p>
+            `;
+            document.getElementById('weather-info').innerHTML = weatherInfo;
+        }
+    </script>
+</body>
+</html>
